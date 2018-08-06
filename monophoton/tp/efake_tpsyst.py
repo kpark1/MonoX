@@ -14,7 +14,10 @@ import shutil
 thisdir = os.path.dirname(os.path.realpath(__file__))
 basedir = os.path.dirname(thisdir)
 sys.path.append(basedir)
+
+
 import config
+
 from tp.efake_conf import outputDir, roofitDictsDir
 import tp.efake_plot as efake_plot
 

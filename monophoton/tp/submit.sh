@@ -20,5 +20,5 @@ do
     done
 done
 
-~/bin/condor-run efake_tpsyst.py -e "data $binning" -a syst_args.txt
-~/bin/condor-run efake_tpsyst.py -e "mc $binning" -a syst_args.txt
+~yiiyama/bin/condor-run efake_tpsyst.py -e "data $binning" -a syst_args.txt
+~yiiyama/bin/condor-run efake_tpsyst.py -e "mc $binning" -a syst_args.txt

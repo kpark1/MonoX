@@ -1,21 +1,27 @@
 import os
+import sys
+sys.path.append('/home/kpark1/cms/cmssw/010/CMSSW_9_4_4/src/MonoX/monophoton')
 import config
-
+import math
+from numpy import linspace, ndarray
+#CMS010
 outputName = 'efake17_pixelpf'
 outputDir = '/data/t3home000/' + os.environ['USER'] + '/monophoton/' + outputName 
 roofitDictsDir = '/home/ballen/cms/cmssw/010/CMSSW_9_4_4/src/RooFit'
-
+#changed from 
 PRODUCT = 'frate'
+
 # PRODUCT = 'eff'
 
-# analysis = 'monophoton'
-analysis = 'darkphoton'
+analysis = 'monophoton'
+# analysis = 'darkphoton'
 
 dataSource = 'sph' # sph or sel or smu
 if dataSource == 'sph':
-    monophSel = 'probes.scRawPt > 175.'
+    monophSel = 'probes.scRawPt > 200.'
 elif dataSource == 'sel':
-    monophSel = 'probes.scRawPt > 25. && probes.scRawPt < 175.'
+    monophSel = 'probes.scRawPt > 25. && probes.scRawPt < 200.'
+
 
 # panda::XPhoton::IDTune { 0 : S15, 1 : S16, 2 : GJCWiso, 3 : ZGCWIso }
 if analysis == 'monophoton':
@@ -66,6 +72,7 @@ skimConfig = {
 lumiSamples = skimConfig['phdata'+config.year][0]
 
 def getBinning(binningName):
+
     if binningName == 'inclusive':
         binningTitle = 'p_{T}^{probe} (GeV)'
         binning = [175., 6500.]
@@ -76,6 +83,67 @@ def getBinning(binningName):
             name = 'pt_{low:.0f}_{high:.0f}'.format(**repl)
             cut = 'probes.scRawPt > {low:.0f} && probes.scRawPt < {high:.0f}'.format(**repl)
             fitBins.append((name, cut))
+
+        binning.pop()
+        binning.append(500.)
+    
+    elif binningName =='ptlow':
+        binningTitle = 'p_{T}^{probe} (GeV)'
+        binning = ndarray.tolist(linspace(20, 80,8))        
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'pt_{low:.0f}_{high:.0f}'.format(**repl)
+            cut = 'probes.scRawPt > {low:.0f} && probes.scRawPt < {high:.0f}'.format(**repl)
+            fitBins.append((name, cut))
+
+        binning.pop()
+        binning.append(500.)
+
+    elif binningName =='ptmedium':
+        binningTitle = 'p_{T}^{probe} (GeV)'
+        binning = ndarray.tolist(linspace(80, 200,8))   
+        
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'pt_{low:.0f}_{high:.0f}'.format(**repl)
+            cut = 'probes.scRawPt > {low:.0f} && probes.scRawPt < {high:.0f}'.format(**repl)
+            fitBins.append((name, cut))
+
+        binning.pop()
+        binning.append(500.)
+
+    elif binningName =='pthigh':
+        binningTitle = 'p_{T}^{probe} (GeV)'
+        #binning = [200., 225., 250., 300., 500., 1000., 6500.]
+        binning = [200., 225., 250., 350., 6500]
+        
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'pt_{low:.0f}_{high:.0f}'.format(**repl)
+            cut = 'probes.scRawPt > {low:.0f} && probes.scRawPt < {high:.0f}'.format(**repl)
+            fitBins.append((name, cut))
+
+
+
+        binning.pop()
+        binning.append(500.)
+
+    elif binningName =='pthigh2':
+        binningTitle = 'p_{T}^{probe} (GeV)'
+        #binning = [200., 225., 250., 300., 500., 1000., 6500.]
+        binning = [200., 300., 1000., 5000., 10000.]
+        
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'pt_{low:.0f}_{high:.0f}'.format(**repl)
+            cut = 'probes.scRawPt > {low:.0f} && probes.scRawPt < {high:.0f}'.format(**repl)
+            fitBins.append((name, cut))
+
+
 
         binning.pop()
         binning.append(500.)
@@ -130,7 +198,8 @@ def getBinning(binningName):
 
     elif binningName == 'highpt':
         binningTitle = 'p_{T}^{probe} (GeV)'
-        binning = [175., 200., 225., 250., 275., 300., 350., 400., 6500.] 
+        binning = [175., 200., 225., 250., 275., 300., 600., 6500.] 
+        #binning = [175., 200., 225., 250., 275., 300., 350., 400., 600., 6500.]
         
         fitBins = []
         for iBin in range(len(binning) - 1):
@@ -265,7 +334,43 @@ def getBinning(binningName):
             name = 'eta_{low:.1f}_{high:.1f}'.format(**repl)
             cut = 'probes.scRawPt > 40. && TMath::Abs(probes.eta_) > {low:.1f} && TMath::Abs(probes.eta_) < {high:.1f}'.format(**repl)
             fitBins.append((name, cut))
+#added aug 1st
+    elif binningName == 'eta_high':
+        binningTitle = '#eta^{probe} (GeV)'
+        binning = ndarray.tolist(linspace(-1.5, 1.5, 8))   
     
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'eta_{low:.1f}_{high:.1f}'.format(**repl)
+            cut = 'probes.scRawPt > 40. && probes.eta_ > {low:.1f} && probes.eta_ < {high:.1f}'.format(**repl)
+            fitBins.append((name, cut))
+
+#added aug 2nd
+    elif binningName == 'eta_high_2':
+        binningTitle = '#eta^{probe} (GeV)'
+        binning = [ -1.5, -1.25, -1., 0., 1.,1.25, 1.5]
+    
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'eta_{low:.1f}_{high:.1f}'.format(**repl)
+            cut = 'probes.scRawPt > 40. && probes.eta_ > {low:.1f} && probes.eta_ < {high:.1f}'.format(**repl)
+            fitBins.append((name, cut))
+
+#added aug 2nd    
+   
+    elif binningName == 'eta_high_3':
+        binningTitle = '|#eta^{probe}| (GeV)'
+        binning = [-1.5,  -1.,   0., 1.,  1.5]
+    
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'eta_{low:.1f}_{high:.1f}'.format(**repl)
+            cut = 'probes.scRawPt > 40. && probes.eta_ > {low:.1f} && probes.eta_ < {high:.1f}'.format(**repl)
+            fitBins.append((name, cut))
+
     elif binningName == 'njet':
         binningTitle = 'N^{jet}'
         binning = [0., 1., 2., 3., 4., 10.]
@@ -280,10 +385,123 @@ def getBinning(binningName):
                 cut = 'probes.scRawPt > 40. && TMath::Max(0, jets.size - 2) >= {low} && TMath::Max(0, jets.size - 2) <= {high}'.format(**repl)
     
             fitBins.append((name, cut))
+            
+#added august 2nd
+    elif binningName == 'njet_2':
+        binningTitle = 'N^{jet}'
+        binning = [0., 2., 4., 6., 8.]
     
+        fitBins = []
+        for low, high in [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 10)]:
+            repl = {'low': low, 'high': high}
+            name = 'njet_{low}_{high}'.format(**repl)
+            if low == high:
+                cut = 'probes.scRawPt > 40. && TMath::Max(0, jets.size - 2) == {low}'.format(**repl)
+            else:
+                cut = 'probes.scRawPt > 40. && TMath::Max(0, jets.size - 2) >= {low} && TMath::Max(0, jets.size - 2) <= {high}'.format(**repl)
+    
+            fitBins.append((name, cut))
+#added august 2nd
+    elif binningName == 'njet_3':
+        binningTitle = 'N^{jet}'
+        binning = [0., 5., 10., 15., 20.]
+    
+        fitBins = []
+        for low, high in [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 10)]:
+            repl = {'low': low, 'high': high}
+            name = 'njet_{low}_{high}'.format(**repl)
+            if low == high:
+                cut = 'probes.scRawPt > 40. && TMath::Max(0, jets.size - 2) == {low}'.format(**repl)
+            else:
+                cut = 'probes.scRawPt > 40. && TMath::Max(0, jets.size - 2) >= {low} && TMath::Max(0, jets.size - 2) <= {high}'.format(**repl)
+    
+            fitBins.append((name, cut))
+#added July 26
+    elif binningName == 'phi_high':
+        binningTitle = 'phi'
+        binning = ndarray.tolist(linspace(-math.pi, math.pi, 30))
+        
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'phi_{low:f}_{high:f}'.format(**repl)
+            cut = 'tags.phi_ > {low:f} && tags.phi_ < {high:f}'.format(**repl)
+            #cut = ' TMath::Abs(tags.phi_) > {low:f} && TMath::Abs(tags.phi_) < {high:f}'.format(**repl)
+            fitBins.append((name, cut))  
+#added August 2nd
+    elif binningName == 'phi_high_2':
+        binningTitle = 'phi'
+        binning = [-math.pi, -2., -1., 0., 1., 2., math.pi]
+        
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name = 'phi_{low:f}_{high:f}'.format(**repl)
+            cut = 'tags.phi_ > {low:f} && tags.phi_ < {high:f}'.format(**repl)
+            #cut = ' TMath::Abs(tags.phi_) > {low:f} && TMath::Abs(tags.phi_) < {high:f}'.format(**repl)
+            fitBins.append((name, cut))
+#added august 2nd
     elif binningName == 'npv':
         binningTitle = 'N^{PV}'
-        binning = [0., 10., 20., 30.]
+        binning = [0., 10., 20., 30.,40., 50., 60.]
+    
+        fitBins = []
+        for low, high in [(0, 9), (10, 19), (20, 29)]:
+            repl = {'low': low, 'high': high}
+            name = 'npv_{low}_{high}'.format(**repl)
+            if low == high:
+                cut = 'npv == {low}'.format(**repl)
+            else:                
+                cut = 'npv >= {low} && npv <= {high}'.format(**repl)
+    
+            fitBins.append((name, cut))  
+#added august 
+    elif binningName =='npv_3':
+        binningTitle = 'N^{PV}'
+        #binning = 
+        binning = [0., 10., 20., 30.,40., 50., 60.]
+        
+        fitBins = []
+        for iBin in range(len(binning) - 1):
+            repl = {'low': binning[iBin], 'high': binning[iBin + 1]}
+            name =  'npv_{low}_{high}'.format(**repl)
+            cut = 'npv >= {low} && npv <= {high}'.format(**repl)
+            fitBins.append((name, cut))
+
+#added july 25
+    elif binningName == 'npv_low':
+        binningTitle = 'N^{PV}'
+        binning = [0., 10., 20., 30.,40., 50., 60.]
+    
+        fitBins = []
+        for low, high in [(0, 9), (10, 19), (20, 29)]:
+            repl = {'low': low, 'high': high}
+            name = 'npv_{low}_{high}'.format(**repl)
+           
+            if low == high:
+                cut = ' npv == {low}'.format(**repl)
+            else:                cut = 'npv >= {low} && npv <= {high}'.format(**repl)
+    
+            fitBins.append((name, cut))
+#added july 25
+    elif binningName == 'npv_high':
+        binningTitle = 'N^{PV}'
+        binning = [0., 10., 20., 30.,40., 50., 60.]
+    
+        fitBins = []
+        for low, high in [(0, 9), (10, 19), (20, 29)]:
+            repl = {'low': low, 'high': high}
+            name = 'npv_{low}_{high}'.format(**repl)
+            if low == high:
+                cut = 'npv == {low}'.format(**repl)
+            else:                cut = 'npv >= {low} && npv <= {high}'.format(**repl)
+    
+            fitBins.append((name, cut))
+    
+    elif binningName == 'npv_2':
+        binningTitle = 'N^{PV}'
+        #binning = [0., 10., 20., 30.]
+        binning = [0., 5., 10., 15., 20., 25., 30.]  
     
         fitBins = []
         for low, high in [(0, 9), (10, 19), (20, 29)]:

@@ -204,10 +204,10 @@ canvas.legend.setPosition(0.7, 0.8, 0.9, 0.9)
 if PRODUCT == 'frate':
     result.SetMaximum(0.05)
     canvas.legend.add(PRODUCT, 'R_{e}', opt = 'LP', color = ROOT.kBlack, mstyle = 8)
-    canvas.ylimits = (0., 0.05)
+    canvas.ylimits = (0., .1)
 else:
     canvas.legend.add(PRODUCT, '#epsilon_{e}', opt = 'LP', color = ROOT.kBlack, mstyle = 8)
-    canvas.ylimits = (0.75, 1.)
+    canvas.ylimits = (0.75, -1.)
 
 if dataType == 'mc':
     canvas.legend.add(PRODUCT + '_truth', 'MC truth', opt = 'LP', color = ROOT.kGreen, mstyle = 4)
@@ -345,7 +345,7 @@ if uncSource:
     for conf in meas:
         for bin, _ in fitBins:
             canvas.Clear(full = True)
-            canvas.ylimits = (0., 0.1)
+            canvas.ylimits = (0., -1.)
             canvas.xtitle = '(N_{Z}^{toy}-N_{Z}^{orig})/N_{Z}^{orig}'
     
             canvas.legend.setPosition(0.7, 0.7, 0.9, 0.9)
